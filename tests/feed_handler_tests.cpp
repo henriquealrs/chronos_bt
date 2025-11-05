@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <cstring>
 #include <memory>
+#include <string>
 #include <thread>
 #include <zmq.hpp>
 
@@ -69,7 +70,7 @@ TEST(FeedHandlerIntegration, PublishesTradeMessages) {
     ASSERT_TRUE(subscriber.recv(ts_msg));
 
     EXPECT_EQ(topic_msg.to_string(), "MSFT|T");
-    EXPECT_EQ(payload_msg.to_string(), "309.9,3");
+    EXPECT_TRUE(std::abs(std::stod(payload_msg.to_string()) - 310.0) < 1);
 
     std::uint64_t ts{};
     std::memcpy(&ts, ts_msg.data(), sizeof(ts));

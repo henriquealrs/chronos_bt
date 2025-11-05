@@ -17,6 +17,7 @@
 #include <string>
 #include <string_view>
 #include <thread>
+#include <type_traits>
 #include <utility>
 #include <vector>
 #include <zmq.hpp>
@@ -48,7 +49,6 @@ class Publisher {
     Publisher(std::string endpoint, FeedVectPtr &&...feed)
         : pub_(chronos::zmq_utils::make_pub(zmq_ctx_, endpoint)),
           total_feeders_((feed.size() + ...)) {
-        std::cout << "Starting " << (feed.size() + ...) << " feeds\n";
         (SpawnFeeds(feed), ...);
     }
 
@@ -58,7 +58,6 @@ class Publisher {
         while (!stoken.stop_requested()) {
             if (auto data_opt = feed->ReadLine(); data_opt.has_value()) {
                 auto [topic, value, ts] = feed->Serialize(*data_opt);
-                std::cout << "Sending: " << topic << "\n";
                 InMsg msg{ts, topic, value};
                 Enqueue(std::move(msg));
             } else {
@@ -84,6 +83,11 @@ class Publisher {
     void Stop();
     void NotifyFeederDone();
     [[nodiscard]] constexpr std::size_t GetTotalThreads() const noexcept {
+        if (std::is_constant_evaluated()) {
+            std::cout << " Compile time\n";
+        } else {
+            std::cout << "Not compile time\n";
+        }
         return total_feeders_;
     }
 

@@ -23,8 +23,6 @@ int main(int argc, char **argv) {
     sub.set(zmq::sockopt::rcvhwm, 1000);
 
     sub.connect(endpoint);
-    std::cout << "[SUB] connected to " << endpoint << " filter='" << topic
-              << "'\n";
 
     while (true) {
         zmq::message_t topic_frame;

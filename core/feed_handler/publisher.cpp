@@ -17,7 +17,7 @@ void Publisher::Start() {
         chronos::thread_utils::AdjustCurrentThreadNice(-1);
         this->Run(st);
     });
-    if (total_feeders_ == 0) {
+    if (GetTotalThreads() == 0) {
         Stop();
     }
 }
@@ -32,7 +32,7 @@ void Publisher::Stop() {
 void Publisher::NotifyFeederDone() {
     const auto finished =
         finished_feeders_.fetch_add(1, std::memory_order_acq_rel) + 1;
-    if (finished >= total_feeders_) {
+    if (finished >= GetTotalThreads()) {
         Stop();
     }
 }
