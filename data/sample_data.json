@@ -1,0 +1,16 @@
+[
+    {
+        "ticker": "GOOGL",
+        "feeds": {
+            "quotes": "goog_quote_2023_05_12.txt",
+            "trades": "googl_trade_2023_05_12.txt"
+        }
+    },
+    {
+        "ticker": "MSFT",
+        "feeds": {
+            "quotes": "msft_quote_2023_05_12.txt",
+            "trades": "msft_trade_2023_05_12.txt"
+        }
+    }
+]
